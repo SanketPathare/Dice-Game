@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+        }
+        .dice {
+            font-size: 100px;
+            display: inline-block;
+            margin: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .dice {
+                font-size: 80px;
+            }
+            button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dice Game</h1>
+        <label for="numPlayers" >Enter number of players (2-6): </label>
+        <input type="number" id="numPlayers" min="2" max="6">
+        <button onclick="setupGame()">Set Players</button>
+        <div id="diceContainer"></div>
+        <div class="result" id="result">Roll the dice!</div>
+        <button onclick="rollDice()">Roll Dice</button>
+    </div>
+
+    <script>
+        function setupGame() {
+            const numPlayers = document.getElementById("numPlayers").value;
+            const diceContainer = document.getElementById("diceContainer");
+            diceContainer.innerHTML = "";
+            
+            for (let i = 1; i <= numPlayers; i++) {
+                let diceDiv = document.createElement("div");
+                diceDiv.classList.add("dice");
+                diceDiv.id = `player${i}Dice`;
+                diceDiv.textContent = "🎲";
+                diceContainer.appendChild(diceDiv);
+            }
+        }
+        
+        function rollDice() {
+            const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+            const numPlayers = document.getElementById("numPlayers").value;
+            let rolls = [];
+            
+            for (let i = 1; i <= numPlayers; i++) {
+                let roll = Math.floor(Math.random() * 6);
+                rolls.push(roll);
+                document.getElementById(`player${i}Dice`).textContent = diceFaces[roll];
+            }
+            
+            let maxRoll = Math.max(...rolls);
+            let winners = rolls.map((roll, index) => roll === maxRoll ? `Player ${index + 1}` : null).filter(Boolean);
+            
+            let resultText = winners.length > 1 ? `It's a tie between ${winners.join(" & ")}!` : `${winners[0]} Wins!`;
+            document.getElementById("result").textContent = resultText;
+        }
+    </script>
+</body>
+</html>
